@@ -4,8 +4,6 @@ services:
       context: ./app
       dockerfile: ../docker/Dockerfile
     container_name: lab-api-sre
-    # Note que removemos o "ports" daqui. 
-    # Agora só o Nginx fala com o mundo externo.
     restart: always
 
   nginx:
@@ -18,3 +16,30 @@ services:
     depends_on:
       - api
     restart: always
+
+  netdata:
+    image: netdata/netdata:latest
+    container_name: lab-monitor-netdata
+    ports:
+      - "19999:19999"
+    restart: always
+    cap_add:
+      - SYS_PTRACE
+      - NET_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - netdataconfig:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/lib/netdata/cache
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+volumes:
+  netdataconfig:
+  netdatalib:
+  netdatacache:
