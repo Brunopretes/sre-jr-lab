@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# Docker
+.docker/
+
+# Ansible
+*.retry
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
