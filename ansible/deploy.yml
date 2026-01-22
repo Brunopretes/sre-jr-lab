@@ -1,5 +1,5 @@
 ---
-- name: Deploy da API de Laboratório
+- name: Deploy da API de Laboratório com Nginx
   hosts: servers
   vars:
     app_path: "/home/sre/app-lab"
@@ -25,6 +25,11 @@
     - name: Copiar pasta do Docker
       copy:
         src: "../docker"
+        dest: "{{ app_path }}/"
+
+    - name: Copiar pasta do Nginx
+      copy:
+        src: "../nginx"
         dest: "{{ app_path }}/"
 
     - name: Copiar arquivo Docker Compose
