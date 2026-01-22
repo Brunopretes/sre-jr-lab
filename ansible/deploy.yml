@@ -1,0 +1,39 @@
+---
+- name: Deploy da API de Laboratório
+  hosts: servers
+  vars:
+    app_path: "/home/sre/app-lab"
+
+  tasks:
+    - name: Limpar pasta para deploy limpo
+      file:
+        path: "{{ app_path }}"
+        state: absent
+
+    - name: Criar diretório da aplicação
+      file:
+        path: "{{ app_path }}"
+        state: directory
+        owner: sre
+        group: sre
+
+    - name: Copiar pasta da API
+      copy:
+        src: "../app"
+        dest: "{{ app_path }}/"
+
+    - name: Copiar pasta do Docker
+      copy:
+        src: "../docker"
+        dest: "{{ app_path }}/"
+
+    - name: Copiar arquivo Docker Compose
+      copy:
+        src: "../docker-compose.yml"
+        dest: "{{ app_path }}/"
+
+    - name: Subir a aplicação via Docker Compose
+      community.docker.docker_compose_v2:
+        project_src: "{{ app_path }}"
+        state: present
+        build: always

@@ -1,13 +1,9 @@
-version: '3.8'
-
 services:
   api:
     build:
-      context: ./app        # Onde está o código e o requirements.txt
-      dockerfile: ../docker/Dockerfile # Onde está o seu Dockerfile
+      context: ./app        # O Docker agora "entra" na pasta app para buildar
+      dockerfile: ../docker/Dockerfile
     container_name: lab-api-sre
     ports:
       - "8000:8000"
     restart: always
-    environment:
-      - ENV=dev

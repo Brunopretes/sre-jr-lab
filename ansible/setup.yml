@@ -1,0 +1,42 @@
+---
+- name: Preparar Servidor Ubuntu para o Lab
+  hosts: servers
+  become: yes
+
+  tasks:
+    - name: Remover TODOS os pacotes conflitantes da Docker Inc
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+          - docker-buildx-plugin
+        state: absent
+        purge: yes
+
+    - name: Forçar limpeza de dependências residuais
+      shell: apt-get autoremove -y && apt-get clean
+
+    - name: Atualizar o cache do apt
+      apt:
+        update_cache: yes
+
+    - name: Instalar Docker e Docker Compose nativos do Ubuntu
+      apt:
+        name:
+          - docker.io
+          - docker-compose-v2
+        state: present
+
+    - name: Garantir que o serviço Docker está ativo
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Adicionar o usuário sre ao grupo docker
+      user:
+        name: sre
+        groups: docker
+        append: yes
