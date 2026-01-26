@@ -1,0 +1,34 @@
+---
+- name: Configuração de Segurança do Servidor
+  hosts: servers
+  become: yes
+
+  tasks:
+    - name: Garantir que o UFW está instalado
+      apt:
+        name: ufw
+        state: present
+
+    - name: Permitir tráfego SSH
+      ufw:
+        rule: allow
+        port: '22'
+        proto: tcp
+
+    - name: Permitir tráfego HTTP (Nginx)
+      ufw:
+        rule: allow
+        port: '80'
+        proto: tcp
+
+    - name: Permitir tráfego Netdata
+      ufw:
+        rule: allow
+        port: '19999'
+        proto: tcp
+
+    - name: Habilitar o Firewall e negar o restante
+      ufw:
+        state: enabled
+        policy: deny
+        direction: incoming
