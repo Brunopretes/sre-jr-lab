@@ -1,26 +1,33 @@
-# Laboratório SRE Junior - API Conteinerizada
+# Laboratório SRE Junior: Infraestrutura Escalável e Monitorada
 
-Este projeto demonstra uma arquitetura básica de SRE, automatizando a infraestrutura e o deploy de uma API FastAPI.
+Este projeto demonstra a implementação de uma arquitetura completa utilizando práticas de SRE (Site Reliability Engineering), focando em automação, observabilidade e resiliência.
 
-## 🏗️ Arquitetura
-- **Host Local:** Linux Mint (Estação de Controle)
-- **Servidor:** Ubuntu Server (Host de Aplicação)
+## 🏗️ Arquitetura do Projeto
+A solução é composta por 4 camadas principais rodando em Docker:
 - **Proxy Reverso:** Nginx (Porta 80)
-- **Backend:** FastAPI (Python 3.12)
-- **Automação:** Ansible
+- **API:** FastAPI (Python 3.12) com Health Checks ativos
+- **Banco de Dados:** PostgreSQL 16 com volumes persistentes
+- **Observabilidade:** Netdata para métricas de performance em tempo real
+
+
 
 ## 🛠️ Tecnologias Utilizadas
-- **Docker & Docker Compose:** Conteinerização e orquestração local.
-- **Ansible:** Configuração de servidor e entrega contínua (CD).
-- **GitHub:** Versionamento de código.
+- **Ansible:** Automação do provisionamento e deploy.
+- **Docker & Docker Compose:** Containerização e orquestração local.
+- **UFW (Uncomplicated Firewall):** Segurança da camada de rede.
+- **SQLAlchemy:** Integração e persistência de dados.
 
-## 🚀 Como rodar o deploy
-1. Certifique-se de que o SSH entre o Host e o Server está configurado.
-2. Prepare o servidor:
-   `ansible-playbook -i ansible/hosts.ini ansible/setup.yml --ask-become-pass`
-3. Realize o deploy:
-   `ansible-playbook -i ansible/hosts.ini ansible/deploy.yml`
+## 🚀 Como rodar o projeto
+1. **Configuração do Inventário:**
+   Atualize o arquivo `ansible/hosts.ini` com o IP do seu servidor.
+   
+2. **Execução do Deploy:**
+   ```bash
+   ansible-playbook -i ansible/hosts.ini ansible/deploy.yml
 
-## 📊 Monitoramento
-Para visualizar o consumo de recursos:
-`ssh user@ip-do-servidor "docker stats"`
+3. **Execução do Deploy**
+
+Rode o playbook para configurar toda a infraestrutura automaticamente:
+Bash
+
+ansible-playbook -i ansible/hosts.ini ansible/deploy.yml
