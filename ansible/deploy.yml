@@ -1,10 +1,13 @@
 ---
-- name: Deploy da API de Laboratório com Nginx
+- name: Deploy da API de Laboratório com Nginx e DB
   hosts: servers
   vars:
     app_path: "/home/sre/app-lab"
 
   tasks:
+    - name: Parar e remover containers antigos
+      shell: "cd {{ app_path }} && docker compose down --remove-orphans || true"
+
     - name: Limpar pasta para deploy limpo
       file:
         path: "{{ app_path }}"
@@ -17,25 +20,15 @@
         owner: sre
         group: sre
 
-    - name: Copiar pasta da API
+    - name: Copiar arquivos do projeto
       copy:
-        src: "../app"
+        src: "../{{ item }}"
         dest: "{{ app_path }}/"
-
-    - name: Copiar pasta do Docker
-      copy:
-        src: "../docker"
-        dest: "{{ app_path }}/"
-
-    - name: Copiar pasta do Nginx
-      copy:
-        src: "../nginx"
-        dest: "{{ app_path }}/"
-
-    - name: Copiar arquivo Docker Compose
-      copy:
-        src: "../docker-compose.yml"
-        dest: "{{ app_path }}/"
+      loop:
+        - app
+        - docker
+        - nginx
+        - docker-compose.yml
 
     - name: Subir a aplicação via Docker Compose
       community.docker.docker_compose_v2:
